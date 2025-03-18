@@ -1,0 +1,39 @@
+/**
+ * Alumno: Jose Rivero
+ * C.I: 28.492.353
+ * Materia: Lenguajes de Programación
+ * Fecha: 15-03-2025
+ **/
+
+@top JSON { s } //JSON = Element
+
+s { Object | Array | String | Number | True | False | Null }        //variable inicial y sus producciones
+
+String { string }                                                   //Regla terminal
+Object { "{" list<Member>? "}" }                                    //Regla no terminal, recursiva
+Member { MemberName ":" s }                                         //Regla no terminal
+MemberName { string }                                               //Regla terminal
+Array  { "[" list<s>? "]" }                                         //Regla no terminal, recursiva
+list<T> { T ("," T)* }                                              //Regla con plantilla
+
+@tokens {
+
+  //numericos
+  Number { '-'? integer fraction? exponent?  }                      //Regla no terminal
+  integer  { '0' | $[1-9] @digit* }                                 //terminal
+  fraction { '.' @digit+ }                                          //terminal
+  exponent  { $[eE] $[+\-]? @digit+ }                               //terminal
+
+  //caracteres
+  string { '"' char* '"' }  //                                      //terminal
+  char { $[\u{20}\u{21}\u{23}-\u{5b}\u{5d}-\u{24f}] | '\\"' }       //terminal (caracteres validos)
+
+  //logicos
+  True  { "true" }                                                  //terminal
+  False { "false" }                                                 //terminal
+  Null  { "null" }                                                  //terminal
+
+  whitespace { @whitespace+ }
+}
+
+@skip { whitespace }
